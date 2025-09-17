@@ -34,7 +34,9 @@ services:
     depends_on:
       - wordpress
     networks:
-      - inception_network
+      inception_network:
+        aliases:
+          - soksak.42.fr
 
 volumes:
   mariadb_data:

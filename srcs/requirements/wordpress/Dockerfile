@@ -20,6 +20,8 @@ COPY tools/create_wordpress.sh /usr/local/bin/
 
 RUN mkdir -p /var/www/html
 
+RUN chown -R www-data:www-data /var/www/html
+
 WORKDIR /var/www/html
 
 RUN chmod +x /usr/local/bin/create_wordpress.sh
