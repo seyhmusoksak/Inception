@@ -1,12 +1,7 @@
 #!/bin/bash
+set -e
 
 [ -f ./index.html ] && rm ./index.html
-
-if [ ! -x /usr/local/bin/wp-cli ]; then
-  echo "Downloading wp-cli..."
-  wget -q https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -O /usr/local/bin/wp-cli
-  chmod +x /usr/local/bin/wp-cli
-fi
 
 if [ ! -f wp-settings.php ]; then
   echo "Downloading WordPress..."
@@ -22,8 +17,10 @@ if [ ! -f wp-config.php ]; then
     --dbname=$MYSQL_DATABASE \
     --dbuser=$MYSQL_USER \
     --dbpass=$MYSQL_PASSWORD \
-    --dbhost=mariadb-inception \
+    --dbhost=mariadb \
     --allow-root
+fi
+
 
   echo "Installing WordPress..."
   wp-cli core install \
@@ -39,6 +36,12 @@ if [ ! -f wp-config.php ]; then
   wp-cli user create \
     "$WORDPRESS_EXTRA_USER" \
     "$WORDPRESS_EXTRA_USER_EMAIL" \
+    --user_pass="$WORDPRESS_EXTRA_USER_PASSWORD" \
     --role=editor \
     --allow-root
+
 fi
+
+chown -R www-data:www-data /var/www/html
+
+exec "$@"

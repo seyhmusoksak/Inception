@@ -12,20 +12,25 @@ RUN apt-get update && \
 	php8.2-mysql \
 	php8.2-cgi \
 	wget \
-	unzip
+	unzip \
+	curl
 
 COPY conf/www.conf /etc/php/8.2/fpm/pool.d/
 
 COPY tools/create_wordpress.sh /usr/local/bin/
 
-RUN mkdir -p /var/www/html
+RUN curl -s -o /usr/local/bin/wp-cli https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+	&& chmod +x /usr/local/bin/wp-cli \
+	&& chown www-data:www-data /usr/local/bin/wp-cli
 
-RUN chown -R www-data:www-data /var/www/html
-
-WORKDIR /var/www/html
+RUN mkdir -p /var/www/html && chown -R www-data:www-data /var/www/html
 
 RUN chmod +x /usr/local/bin/create_wordpress.sh
 
+WORKDIR /var/www/html
+
 EXPOSE 9000
 
-CMD ["bash", "-c", "/usr/local/bin/create_wordpress.sh && php-fpm8.2 -F"]
+ENTRYPOINT ["/usr/local/bin/create_wordpress.sh"]
+
+CMD ["php-fpm8.2", "-F"]
