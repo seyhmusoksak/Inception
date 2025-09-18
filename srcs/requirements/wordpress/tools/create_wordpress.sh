@@ -3,13 +3,17 @@ set -e
 
 [ -f ./index.html ] && rm ./index.html
 
+
 if [ ! -f wp-settings.php ]; then
   echo "Downloading WordPress..."
   wget -q https://wordpress.org/latest.zip -O /tmp/wordpress.zip
   unzip -q /tmp/wordpress.zip -d /tmp
   mv /tmp/wordpress/* .
   rm -rf /tmp/wordpress /tmp/wordpress.zip
+else
+  echo "WordPress already installed."
 fi
+
 
 if [ ! -f wp-config.php ]; then
   echo "Creating wp-config.php..."
@@ -17,10 +21,8 @@ if [ ! -f wp-config.php ]; then
     --dbname=$MYSQL_DATABASE \
     --dbuser=$MYSQL_USER \
     --dbpass=$MYSQL_PASSWORD \
-    --dbhost=mariadb \
+    --dbhost=mariadb-inception \
     --allow-root
-fi
-
 
   echo "Installing WordPress..."
   wp-cli core install \
@@ -39,7 +41,6 @@ fi
     --user_pass="$WORDPRESS_EXTRA_USER_PASSWORD" \
     --role=editor \
     --allow-root
-
 fi
 
 chown -R www-data:www-data /var/www/html

@@ -10,4 +10,6 @@ RUN chmod +x /usr/local/bin/setup_sql.sh
 
 EXPOSE 3306
 
-CMD ["bash", "-c", "/usr/local/bin/setup_sql.sh"]
+ENTRYPOINT ["/usr/local/bin/setup_sql.sh"]
+
+CMD ["mysqld", "--user=mysql", "--datadir=/var/lib/mysql"]
