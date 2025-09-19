@@ -7,6 +7,7 @@ RUN apt-get update && \
 
 RUN mkdir -p /etc/nginx/ssl
 
+COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY tools/create_ssl.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/create_ssl.sh
