@@ -14,8 +14,8 @@ down:
 
 clean: down
 	@echo "Cleaning Docker system..."
-	docker-system prune -af
-	docker-volume prune -f
+	docker system prune -af
+	docker volume prune -f
 
 fclean: clean
 	@echo "Cleaning WordPress and MariaDB data..."
